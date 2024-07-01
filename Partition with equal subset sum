@@ -1,0 +1,28 @@
+class Solution {
+public:
+    bool subsetsum(int ind, int sum, vector<int> &arr, vector<vector<int>>& dp) {
+        if (sum == 0) return true;
+        if (ind < 0) return false;
+        if (dp[ind][sum] != -1) return dp[ind][sum];
+
+        bool nottaken = subsetsum(ind - 1, sum, arr, dp);
+        bool taken = false;
+        if (arr[ind] <= sum) {
+            taken = subsetsum(ind - 1, sum - arr[ind], arr, dp);
+        }
+
+        return dp[ind][sum] = nottaken || taken;
+    }
+
+    bool canPartition(vector<int>& nums) {
+        int n = nums.size();
+        vector<vector<int>> dp(n, vector<int>(10001, -1));
+        int totsum = 0;
+        for (int i = 0; i < n; i++) {
+            totsum += nums[i];
+        }
+        if (totsum % 2) return false;
+        int sum = totsum / 2;
+        return subsetsum(n - 1, sum, nums, dp);
+    }
+};
